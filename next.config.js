@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
 const nextConfig = {
   reactCompiler: true,
   // Enable strict mode for better error handling
@@ -76,4 +78,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

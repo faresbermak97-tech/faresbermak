@@ -3,11 +3,16 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import DetailModal from "../ui/DetailModal"
+import dynamic from "next/dynamic"
 import { FEATURES } from "@/config/site.config"
 import type { Feature } from "@/config/site.config"
 import styles from "./FeaturesSection.module.css"
 import "./Animations.css"
+
+// Dynamically import DetailModal to reduce initial bundle size
+const DetailModal = dynamic(() => import("../ui/DetailModal"), {
+  loading: () => <div className="fixed inset-0 z-9999 bg-black/80 flex items-center justify-center">Loading...</div>
+})
 
 export default function FeaturesSection() {
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null)

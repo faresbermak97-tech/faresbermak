@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "node scripts/generate-sitemap.js && next build",
+    "analyze": "node scripts/generate-sitemap.js && cross-env ANALYZE=true next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "sitemap": "node scripts/generate-sitemap.js"
@@ -20,11 +21,13 @@
     "react-server-dom-webpack": "^19.2.1"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.0.7",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "babel-plugin-react-compiler": "1.0.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.5",
     "tailwindcss": "^4",
