@@ -2,7 +2,7 @@
 
 A modern, responsive portfolio website for Fares Bermak, showcasing services as a Remote Virtual Assistant & Data Entry Expert.
 
-![Portfolio Screenshot](/Pictures/hero-image.jpg)
+![Portfolio Screenshot](/Pictures/hero-image.webp)
 
 ## Features
 
@@ -12,14 +12,27 @@ A modern, responsive portfolio website for Fares Bermak, showcasing services as 
 - **Accessibility**: WCAG-compliant with keyboard navigation support
 - **SEO Optimized**: Meta tags, sitemap, and semantic HTML for better search engine visibility
 - **Performance**: Optimized images, lazy loading, and efficient code splitting
+- **Multilingual Support**: Greetings in 10 languages reflecting trilingual capabilities (Arabic, English, French)
 
 ## Tech Stack
 
 - **Framework**: Next.js 16
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS v4
-- **Animations**: GSAP
 - **Deployment**: Vercel
+- **Analytics**: Vercel Analytics & Speed Insights
+- **Code Quality**: ESLint with Next.js configuration
+
+## Services Offered
+
+### Virtual Assistant & Admin Support
+Complete day-to-day operational support including calendar management, inbox organization, client communications, meeting preparation, and document control.
+
+### Data Entry & Management
+Fast, accurate data capture with structured spreadsheets designed for analysis. Processes 200-400+ records monthly with 99%+ accuracy.
+
+### IT Support Help Desk L1
+Helps remote teams integrate software tools, manage cloud systems, and resolve technical issues quickly.
 
 ## Getting Started
 
@@ -44,7 +57,7 @@ A modern, responsive portfolio website for Fares Bermak, showcasing services as 
    ```bash
    cp .env.example .env.local
    ```
-   
+
    Configure variables in `.env.local` as needed for email services.
 
 4. Run the development server:
@@ -65,17 +78,26 @@ faresbermak/
 │   └── generate-sitemap.js
 ├── src/                 # Source code
 │   ├── app/             # Next.js app directory
+│   │   ├── api/         # API routes
+│   │   ├── layout.tsx   # Root layout
+│   │   └── page.tsx     # Home page
 │   ├── components/      # React components
-│   └── hooks/           # Custom React hooks
+│   │   ├── sections/    # Page sections
+│   │   └── ui/          # UI components
+│   ├── config/          # Configuration files
+│   │   └── site.config.ts # Site configuration
+│   ├── hooks/           # Custom React hooks
+│   └── utils/           # Utility functions
 ├── .env.example         # Example environment variables
 ├── next.config.js       # Next.js configuration
-└── package.json         # Dependencies and scripts
+├── package.json         # Dependencies and scripts
+└── SETUP.md            # Detailed setup guide
 ```
 
 ## Scripts
 
 - `npm run dev` - Start development server
-- `npm run build` - Build for production
+- `npm run build` - Build for production (includes sitemap generation)
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 - `npm run sitemap` - Generate sitemap
@@ -85,6 +107,9 @@ faresbermak/
 See `.env.example` for a list of required environment variables. These include:
 
 - Email service configuration (for contact form)
+  - Resend (recommended)
+  - SendGrid
+  - Nodemailer with SMTP
 - Analytics (optional)
 - API keys (if needed)
 
