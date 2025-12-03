@@ -1,0 +1,114 @@
+# Fares Bermak Portfolio
+
+A modern, responsive portfolio website for Fares Bermak, showcasing services as a Remote Virtual Assistant & Data Entry Expert.
+
+![Portfolio Screenshot](/Pictures/hero-image.jpg)
+
+## Features
+
+- **Modern Design**: Clean, professional interface with smooth animations and transitions
+- **Responsive Layout**: Optimized for all devices, from mobile to desktop
+- **Interactive Components**: Engaging UI elements with hover effects and micro-interactions
+- **Accessibility**: WCAG-compliant with keyboard navigation support
+- **SEO Optimized**: Meta tags, sitemap, and semantic HTML for better search engine visibility
+- **Performance**: Optimized images, lazy loading, and efficient code splitting
+
+## Tech Stack
+
+- **Framework**: Next.js 16
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS v4
+- **Animations**: GSAP
+- **Deployment**: Vercel
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/faresbermak.git
+   cd faresbermak
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Configure variables in `.env.local` as needed for email services.
+
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Structure
+
+```
+faresbermak/
+├── public/               # Static assets
+│   ├── Pictures/        # Images
+│   └── sitemap.xml      # Generated sitemap
+├── scripts/             # Utility scripts
+│   └── generate-sitemap.js
+├── src/                 # Source code
+│   ├── app/             # Next.js app directory
+│   ├── components/      # React components
+│   └── hooks/           # Custom React hooks
+├── .env.example         # Example environment variables
+├── next.config.js       # Next.js configuration
+└── package.json         # Dependencies and scripts
+```
+
+## Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run sitemap` - Generate sitemap
+
+## Environment Variables
+
+See `.env.example` for a list of required environment variables. These include:
+
+- Email service configuration (for contact form)
+- Analytics (optional)
+- API keys (if needed)
+
+## Deployment
+
+The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+
+For other deployment options, check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+- **Email**: faresbermak97@gmail.com
+- **Phone**: +213 542 346 579
+- **LinkedIn**: [faresbermak-va](https://www.linkedin.com/in/faresbermak-va/)
+- **Instagram**: [@bermak_fares](https://www.instagram.com/bermak_fares/)

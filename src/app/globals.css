@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* Component styles are now handled with Tailwind classes */
+
+/* Base Container */
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Mobile First - Base Styles (0px-767px) */
+@media (max-width: 767px) {
+  /* Hide divider on mobile */
+  .divider {
+    display: none;
+  }
+  .container {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+  }
+
+  p, li {
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    line-height: 1.6;
+  }
+
+  /* Adjust padding for safe areas on mobile devices */
+  .safe-padding {
+    padding-top: calc(1rem + env(safe-area-inset-top));
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    padding-left: calc(1rem + env(safe-area-inset-left));
+    padding-right: calc(1rem + env(safe-area-inset-right));
+  }
+}
+
+/* Tablet Styles (768px-1199px) */
+@media (min-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: 0 1.5rem;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  }
+
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  p, li {
+    font-size: clamp(1rem, 2vw, 1.125rem);
+    line-height: 1.7;
+  }
+}
+
+/* Desktop Styles (1200px+) */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1200px;
+    padding: 0 2rem;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 4vw, 4rem);
+  }
+
+  h2 {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+  }
+
+  h3 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  p, li {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    line-height: 1.8;
+  }
+}
+
+/* XL Styles (1440px+) */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1440px;
+  }
+}
+
+
+/* Utility Classes */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bg-gradient-text {
+  background: linear-gradient(135deg, #4D64FF 0%, #7B68EE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(77, 100, 255, 0.5); }
+  50% { box-shadow: 0 0 40px rgba(77, 100, 255, 0.8); }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

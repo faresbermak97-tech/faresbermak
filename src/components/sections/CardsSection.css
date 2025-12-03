@@ -1,0 +1,46 @@
+/* CardsSection.css - OPTIMIZED VERSION */
+
+.full-height {
+  height: 400vh;
+}
+
+.card-dimensions {
+  width: calc(100% - 2cm);
+  height: calc(100% - 4cm);
+  max-width: 1400px;
+}
+
+/* Base card styles with CSS custom properties */
+.card {
+  opacity: 1;
+  overflow: visible;
+  --progress: 0;
+  --scale: calc(1 - var(--progress) * 0.05);
+  transition: transform 0.3s ease-out;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Card-specific transforms using --progress variable */
+.card-1 {
+  z-index: 1;
+  transform: scale(var(--scale)) translateY(0);
+}
+
+.card-2 {
+  z-index: 2;
+  /* Card 2 starts at 100% (just off screen/at bottom) */
+  --translate-y: calc((1 - var(--progress)) * 100%);
+  transform: scale(var(--scale)) translateY(var(--translate-y));
+}
+
+.card-3 {
+  z-index: 3;
+  /* FIX: We add + 100px to the start position. 
+     This pushes Card 3 physically LOWER than Card 2 when waiting.
+     Card 2 (at 100%) will now be visible above Card 3 (at 100% + 100px).
+  */
+  --translate-y: calc((1 - var(--progress)) * (100% + 100px));
+  transform: scale(1) translateY(var(--translate-y));
+}
