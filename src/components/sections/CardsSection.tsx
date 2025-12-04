@@ -7,10 +7,11 @@ import dynamic from "next/dynamic"
 import { SERVICES } from "@/config/site.config"
 import type { Service } from "@/config/site.config"
 import "./CardsSection.css"
+import { ModalSkeleton } from "../ui/Skeletons"
 
 // Dynamically import DetailModal to reduce initial bundle size
 const DetailModal = dynamic(() => import("../ui/DetailModal"), {
-  loading: () => <div className="fixed inset-0 z-9999 bg-black/80 flex items-center justify-center">Loading...</div>
+  loading: () => <ModalSkeleton />
 })
 
 const CardsSection = () => {

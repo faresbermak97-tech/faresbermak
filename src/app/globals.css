@@ -103,51 +103,5 @@
 }
 
 
-/* Utility Classes */
-.text-shadow {
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.bg-gradient-text {
-  background: linear-gradient(135deg, #4D64FF 0%, #7B68EE 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Custom Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(77, 100, 255, 0.5); }
-  50% { box-shadow: 0 0 40px rgba(77, 100, 255, 0.8); }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
+/* Note: Previously defined utility classes and custom scrollbar styles were removed as they were not being used in the application.
+This helps reduce bundle size and improve maintainability. If needed in the future, they can be re-added. */

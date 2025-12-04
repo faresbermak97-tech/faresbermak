@@ -107,6 +107,14 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
+        {/* Preload hero image for faster LCP */}
+        <link 
+          rel="preload" 
+          as="image" 
+          href="/Pictures/hero-image.webp" 
+          fetchPriority="high"
+        />
+
         {/* Structured Data (JSON-LD) for SEO */}
         <script
           type="application/ld+json"
