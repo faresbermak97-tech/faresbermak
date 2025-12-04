@@ -1,27 +1,42 @@
 .tripleSection {
   position: relative;
-  height: 300vh;
+  /* Use auto height so it fits the content perfectly */
+  height: auto;
+  min-height: 100vh; 
   overflow: hidden;
 }
 
+/* --- TIMELINE STYLES --- */
+
+/* Default: Hidden on mobile */
+.timelineLine,
+.timelineDot {
+  display: none;
+}
+
+/* The vertical gray line */
 .timelineLine {
   position: absolute;
   left: 50%;
   top: 0;
   bottom: 0;
   width: 0.25rem;
-  background-color: rgb(229 231 235);
+  background-color: rgb(229 231 235); /* Gray-200 */
   transform: translateX(-50%);
+  z-index: 0;
 }
 
+/* The blue filling line */
 .timelineProgress {
   width: 100%;
-  height: 100%;
-  background-color: rgb(37 99 235);
+  /* Height will be set dynamically via React inline style */
+  background-color: rgb(37 99 235); /* Blue-600 */
   transform-origin: top;
-  transition: height 0.3s ease-out;
+  /* Smooth out the movement slightly */
+  transition: height 0.1s linear; 
 }
 
+/* The Dots */
 .timelineDot {
   position: absolute;
   width: 1rem;
@@ -32,101 +47,106 @@
   z-index: 10;
 }
 
+/* Positioning dots relative to the 3 slides */
 .timelineDotTop1 {
-  top: 16.66%;
+  top: 16.66%; /* Center of 1st slide (roughly) */
   left: 50%;
   transform: translateX(-50%);
 }
 
 .timelineDotTop2 {
-  top: 50%;
+  top: 50%; /* Center of 2nd slide */
   left: 50%;
   transform: translateX(-50%);
 }
 
 .timelineDotTop3 {
-  top: 83.33%;
+  top: 83.33%; /* Center of 3rd slide */
   left: 50%;
   transform: translateX(-50%);
 }
 
+/* --- SLIDE LAYOUT (Mobile First) --- */
+
 .slide {
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
+  flex-direction: column; /* Stack vertically on mobile */
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-}
-
-@media (min-width: 768px) {
-  .slide {
-    padding: 4rem;
-  }
-}
-
-.reverse {
-  flex-direction: row-reverse;
+  padding: 4rem 1rem;
+  z-index: 1; /* Ensure content is above the line */
 }
 
 .slideImg {
   position: relative;
   width: 100%;
-  height: 24rem;
+  height: 20rem; /* Fixed height for mobile */
   border-radius: 1rem;
   overflow: hidden;
-  margin-right: 1rem;
-  margin-left: 1rem;
-  align-self: center;
-}
-
-/* GSAP compatibility */
-
-@media (min-width: 768px) {
-  .slideImg {
-    width: 45%;
-    margin-right: 2rem;
-  }
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
 .slideText {
   width: 100%;
-  padding: 2rem;
-  margin-right: 1rem;
-  margin-left: 1rem;
+  padding: 0;
+  text-align: center;
 }
 
-/* GSAP compatibility */
-
-@media (min-width: 768px) {
-  .slideText {
-    width: 45%;
-    padding: 4rem;
-    margin-left: 2rem;
-  }
+.accent {
+  font-size: 2rem;
+  line-height: 1.1;
+  font-weight: 700;
+  color: rgb(37 99 235);
+  display: block;
+  margin-bottom: 1rem;
 }
 
 .divider {
   display: none;
 }
 
-.accent {
-  font-size: 1.875rem;
-  line-height: 2.25rem;
-  font-weight: 700;
-  color: rgb(37 99 235);
-}
+/* --- DESKTOP STYLES (Min-width: 768px) --- */
 
 @media (min-width: 768px) {
-  .accent {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
+  /* Show timeline on desktop */
+  .timelineLine,
+  .timelineDot {
+    display: block;
   }
-}
 
-@media (min-width: 1024px) {
+  .slide {
+    flex-direction: row; /* Side-by-side on desktop */
+    padding: 4rem;
+    height: 100vh; /* Full viewport height per slide */
+  }
+
+  /* Reverse layout for even slides */
+  .reverse {
+    flex-direction: row-reverse;
+  }
+
+  .slideImg {
+    width: 45%;
+    height: 28rem;
+    margin-bottom: 0;
+    margin-right: 3rem;
+  }
+  
+  .reverse .slideImg {
+    margin-right: 0;
+    margin-left: 3rem;
+  }
+
+  .slideText {
+    width: 45%;
+    padding: 2rem;
+    text-align: left;
+  }
+
   .accent {
     font-size: 3rem;
-    line-height: 1;
   }
 }

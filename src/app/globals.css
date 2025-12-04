@@ -105,3 +105,169 @@
 
 /* Note: Previously defined utility classes and custom scrollbar styles were removed as they were not being used in the application.
 This helps reduce bundle size and improve maintainability. If needed in the future, they can be re-added. */
+
+/* Add these to your globals.css - Mobile-first approach */
+
+/* ============================================
+   HERO SECTION FIXES
+   ============================================ */
+
+/* Fix: Prevent horizontal overflow of scrolling text */
+@media (max-width: 767px) {
+  /* Hero scrolling text - prevent overflow */
+  section:first-of-type .overflow-hidden {
+    max-width: 100vw;
+  }
+  
+  /* Make scrolling text smaller on tiny phones */
+  @media (max-width: 375px) {
+    section:first-of-type .text-\[18vw\] {
+      font-size: 16vw !important;
+    }
+  }
+}
+
+/* ============================================
+   CARDS SECTION FIXES
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Reduce card padding on mobile */
+  .card-dimensions {
+    width: calc(100% - 1rem) !important;
+    height: calc(100% - 2rem) !important;
+  }
+  
+  /* Stack card content vertically on mobile */
+  .card-content {
+    flex-direction: column !important;
+  }
+  
+  /* Better spacing for card text */
+  .content-left {
+    padding: 1.5rem !important;
+  }
+  
+  /* Reduce huge title size on mobile */
+  .content-left h2 {
+    font-size: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Smaller "View Details" button */
+  .content-left button {
+    padding: 0.625rem 1.25rem !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+/* ============================================
+   FEATURES SECTION FIXES
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Hide timeline decoration on mobile - cleaner look */
+  .timelineLine,
+  .timelineDot {
+    display: none !important;
+  }
+  
+  /* Reduce slide image height on mobile */
+  .slideImg {
+    height: 16rem !important;
+  }
+  
+  /* Better text spacing */
+  .slideText {
+    padding: 1.5rem !important;
+  }
+  
+  /* Smaller accent text */
+  .accent {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* ============================================
+   CONTACT SECTION FIXES
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Contact form modal - full screen on mobile */
+  #contact-form > div {
+    max-width: 100% !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Better input sizes on mobile */
+  #contact-form input,
+  #contact-form textarea {
+    font-size: 1rem !important;
+  }
+  
+  /* Smaller close button */
+  #contact-form button[aria-label="Close contact form"] {
+    top: 1rem !important;
+    right: 1rem !important;
+    font-size: 2rem !important;
+  }
+}
+
+/* ============================================
+   ABOUT SECTION FIXES
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Stack image below text on mobile */
+  #about .grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Better spacing */
+  #about .space-y-8 {
+    gap: 1.5rem !important;
+  }
+}
+
+/* ============================================
+   GENERAL MOBILE IMPROVEMENTS
+   ============================================ */
+
+@media (max-width: 767px) {
+  /* Ensure no horizontal scroll anywhere */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Better touch targets (minimum 44x44px) */
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Readable text sizes */
+  p {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  /* Better section spacing */
+  section {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+}
+
+/* ============================================
+   SAFE AREA INSETS (for iPhone notch, etc.)
+   ============================================ */
+
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}
