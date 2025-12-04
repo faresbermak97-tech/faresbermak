@@ -16,12 +16,12 @@ const DetailModal = dynamic(() => import("../ui/DetailModal"), {
 
 export default function FeaturesSection() {
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null)
-  
-  // State for the blue line height percentage
   const [scrollProgress, setScrollProgress] = useState(0)
-  
-  // Ref to track the section container
   const sectionRef = useRef<HTMLElement>(null)
+  
+  // NEW: Track which elements are visible
+  const [visibleElements, setVisibleElements] = useState<Set<number>>(new Set())
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([])
 
   const openModal = (feature: Feature) => {
     setSelectedFeature(feature)
@@ -31,45 +31,59 @@ export default function FeaturesSection() {
     setSelectedFeature(null)
   }
 
-  // Effect to handle scroll animation
+  // Scroll progress effect
   useEffect(() => {
     const handleScroll = () => {
       if (!sectionRef.current) return
 
       const rect = sectionRef.current.getBoundingClientRect()
       const windowHeight = window.innerHeight
-      
-      // Calculate how much of the section has been scrolled past the middle of the screen
-      // We use 'windowHeight / 2' so the line fills up as it passes your eye level
       const sectionTop = rect.top
       const sectionHeight = rect.height
       const startPoint = windowHeight / 2
-      
-      // Logic: 
-      // When section top is at middle of screen -> 0%
-      // When section bottom is at middle of screen -> 100%
       const scrolled = startPoint - sectionTop
       
       let percentage = (scrolled / sectionHeight) * 100
-      
-      // Clamp between 0 and 100
       percentage = Math.max(0, Math.min(100, percentage))
       
       setScrollProgress(percentage)
     }
 
     window.addEventListener("scroll", handleScroll)
-    // Trigger once on mount to set initial state
     handleScroll()
 
     return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // NEW: Intersection Observer for animations (fixes the white overlay bug)
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const slideIndex = slideRefs.current.findIndex(ref => ref === entry.target)
+          if (slideIndex !== -1 && entry.isIntersecting) {
+            setVisibleElements(prev => new Set(prev).add(slideIndex))
+          }
+        })
+      },
+      {
+        threshold: 0.2, // Trigger when 20% of element is visible
+        rootMargin: '0px 0px -10% 0px' // Slight offset for better timing
+      }
+    )
+
+    slideRefs.current.forEach(ref => {
+      if (ref) observer.observe(ref)
+    })
+
+    return () => observer.disconnect()
   }, [])
 
   return (
     <>
       <section
         id="features"
-        ref={sectionRef} // Attach ref here
+        ref={sectionRef}
         className={`${styles.tripleSection} bg-[#FFFFFF]`}
         role="region"
         aria-labelledby="features-heading"
@@ -78,15 +92,13 @@ export default function FeaturesSection() {
           Features
         </h2>
 
-        {/* The Timeline - styles.timelineLine has display:none on mobile via CSS */}
         <div className={styles.timelineLine}>
           <div 
             className={styles.timelineProgress} 
-            style={{ height: `${scrollProgress}%` }} /* Dynamic height */
+            style={{ height: `${scrollProgress}%` }}
           ></div>
         </div>
         
-        {/* Dots - hidden on mobile via CSS */}
         <div className={`${styles.timelineDot} ${styles.timelineDotTop1}`}></div>
         <div className={`${styles.timelineDot} ${styles.timelineDotTop2}`}></div>
         <div className={`${styles.timelineDot} ${styles.timelineDotTop3}`}></div>
@@ -94,9 +106,14 @@ export default function FeaturesSection() {
         {FEATURES.map((s, i) => (
           <div
             key={i}
+            ref={el => { slideRefs.current[i] = el }}
             className={`${styles.slide} ${s.reverse ? styles.reverse : ""}`}
           >
-            <div className={`${styles.slideImg} animate-on-scroll-${s.reverse ? "left" : "right"}`}>
+            <div 
+              className={`${styles.slideImg} animate-on-scroll-${s.reverse ? "left" : "right"} ${
+                visibleElements.has(i) ? 'visible' : ''
+              }`}
+            >
               <Image
                 src={s.image}
                 alt={s.highlight}
@@ -106,7 +123,11 @@ export default function FeaturesSection() {
               />
             </div>
             <div className={styles.divider} />
-            <div className={`${styles.slideText} animate-on-scroll-${s.reverse ? "right" : "left"}`}>
+            <div 
+              className={`${styles.slideText} animate-on-scroll-${s.reverse ? "right" : "left"} ${
+                visibleElements.has(i) ? 'visible' : ''
+              }`}
+            >
               <h2>
                 <span className={styles.accent}>{s.highlight}</span>
               </h2>

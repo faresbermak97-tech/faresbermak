@@ -1,5 +1,5 @@
+/* FIXED VERSION - Removed animation-timeline causing white overlay */
 
-/* Replace GSAP with native CSS animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -33,20 +33,26 @@
   }
 }
 
+/* CRITICAL FIX: Use standard animations WITHOUT animation-timeline 
+   The view() timeline was causing the white overlay on slide 3 */
 .animate-on-scroll {
-  animation: fadeInUp 0.6s ease-out;
-  animation-timeline: view();
-  animation-range: entry 0% cover 30%;
+  animation: fadeInUp 0.8s ease-out forwards;
+  opacity: 0;
 }
 
 .animate-on-scroll-left {
-  animation: fadeInLeft 0.6s ease-out;
-  animation-timeline: view();
-  animation-range: entry 0% cover 30%;
+  animation: fadeInLeft 0.8s ease-out forwards;
+  opacity: 0;
 }
 
 .animate-on-scroll-right {
-  animation: fadeInRight 0.6s ease-out;
-  animation-timeline: view();
-  animation-range: entry 0% cover 30%;
+  animation: fadeInRight 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+/* Use Intersection Observer approach instead */
+.animate-on-scroll.visible,
+.animate-on-scroll-left.visible,
+.animate-on-scroll-right.visible {
+  animation-play-state: running;
 }
