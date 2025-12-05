@@ -222,7 +222,7 @@ export default function ContactSection() {
             <div className="relative lg:static">
               <div className="flex flex-col lg:flex-row items-start gap-6">
                 {/* Email and Phone */}
-                <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+                <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full md:w-auto pr-20 md:pr-0">
                   <a
                     href={`mailto:${PERSONAL_INFO.email}`}
                     className="contact-link group relative inline-block border border-white/40 rounded-full px-6 md:px-8 py-3 md:py-4 text-sm md:text-base overflow-hidden transition-all duration-300 hover:border-[#4D64FF]"
@@ -243,11 +243,10 @@ export default function ContactSection() {
                   </a>
                 </div>
 
-                {/* Mobile button */}
+                {/* Mobile button - FIXED SIZE AND POSITION */}
                 <button
                   onClick={openContactForm}
-                  className="lg:hidden w-40 h-40 rounded-full bg-[#4D64FF] hover:bg-[#3d50cc] flex items-center justify-center text-base transition-all duration-300 hover:scale-105 absolute top-1/2 -translate-y-1/2 right-0"
-                  style={{marginTop: "-80px"}}
+                  className="lg:hidden w-20 h-20 rounded-full bg-[#4D64FF] hover:bg-[#3d50cc] flex items-center justify-center text-xs font-medium transition-all duration-300 hover:scale-105 absolute top-0 right-0 -translate-y-18 z-20"
                   aria-label="Open contact form"
                 >
                   Get in touch

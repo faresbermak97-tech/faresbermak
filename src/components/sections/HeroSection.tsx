@@ -187,13 +187,17 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-black/5"></div>
       </div>
 
-      {/* Badge Right */}
-      <div className="absolute right-6 md:right-16 top-[25%] md:top-[30%] z-20">
-        <div className="text-white text-lg md:text-2xl lg:text-3xl font-semibold leading-tight">
-          <div>Remote Virtual Assistant</div>
-          <div>& Data Entry</div>
-        </div>
-      </div>
+      {/* UPDATED BADGE: 
+         - Mobile: Centered Vertically (top-1/2 -translate-y-1/2) and Horizontally (left-0 right-0 justify-center)
+         - Desktop (md): Returns to original position (right-16 top-[30%])
+      */}
+<div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-center md:block md:top-[30%] md:translate-y-0 md:left-auto md:right-16 z-20">
+  <div className="text-white text-lg md:text-2xl lg:text-3xl font-semibold leading-tight text-left">
+    <div>Remote Virtual Assistant</div>
+    <div>& Data Entry</div>
+  </div>
+</div>
+
 
       {/* Scroll Icon */}
       <div className="absolute right-6 md:right-12 lg:right-16 top-1/2 -translate-y-1/2 z-20 hidden sm:block">
