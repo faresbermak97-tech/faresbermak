@@ -176,7 +176,7 @@ export const PRELOADER_GREETINGS = [
   'Bonjour',
   'Ciao',
   'Hola',
-  'مرحبا',
+  'مرحبــا',
   'Привет',
   'こんにちは',
   'Guten Tag',
