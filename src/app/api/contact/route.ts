@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // 4. Send to Formspree endpoint (using the unique form ID)
+    // 4. Send to Formspree endpoint
     const formspreeUrl = `https://formspree.io/f/${formId}`;
     
     const response = await fetch(formspreeUrl, {
@@ -38,55 +38,64 @@ export async function POST(request: NextRequest) {
         'Accept': 'application/json',
       },
       body: JSON.stringify({
-        // Formspree payload structure
         name: name.trim(),
         email: email.trim(),
         message: message.trim(),
-        _subject: `Website Contact from ${name.trim()}`, // Formspree field for subject
+        _subject: `Website Contact from ${name.trim()}`,
       }),
     });
 
     // 5. Check if submission was successful
     if (response.ok) {
-      // Successful submission
+      // FIXED: Return proper success response
       return NextResponse.json(
-        { success: true, message: 'Message sent successfully! Your submission has been received.' },
+        { 
+          success: true, 
+          message: 'Thank you for your message! I will get back to you soon.' 
+        },
         { status: 200 }
       );
     } else {
-      // Handle non-successful Formspree response
-      let result;
+      // Handle Formspree errors
+      let errorMessage = 'Failed to send message. Please try again.';
+      
       try {
-        result = await response.json();
+        const result = await response.json();
+        if (result.error) {
+          errorMessage = result.error;
+        }
+        console.error('Formspree API Error:', result);
       } catch {
-        // Fallback for non-JSON error pages (the original error cause)
-        return NextResponse.json(
-          { error: `Formspree returned status ${response.status}. Please check your Formspree dashboard for issues.` },
-          { status: 500 }
-        );
+        console.error('Formspree returned non-JSON error, status:', response.status);
       }
       
-      console.error('Formspree API Error:', result);
       return NextResponse.json(
-        { error: result.error || 'Failed to send message. Please try again.' },
+        { error: errorMessage },
         { status: response.status }
       );
     }
 
   } catch (error) {
-    // Catch any unexpected errors (e.g., network issues)
     console.error('API Route Error:', error);
     
-    // Check if it's a JSON parsing error on your end
+    // Check if it's a JSON parsing error
     if (error instanceof SyntaxError) {
       return NextResponse.json(
-        { error: 'Invalid request format from the client.' },
+        { error: 'Invalid request format.' },
         { status: 400 }
       );
     }
 
+    // Check for network errors
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      return NextResponse.json(
+        { error: 'Network error. Please check your connection and try again.' },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json(
-      { error: 'An unexpected server error occurred.' },
+      { error: 'An unexpected error occurred. Please try again.' },
       { status: 500 }
     );
   }
