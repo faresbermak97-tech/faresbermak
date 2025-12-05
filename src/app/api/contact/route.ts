@@ -18,7 +18,6 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Get Form ID from environment
-    // Changed from WEB3FORMS_ACCESS_KEY to FORMSPREE_FORM_ID
     const formId = process.env.FORMSPREE_FORM_ID;
 
     if (!formId) {
@@ -29,8 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // 4. Send to Formspree endpoint
-    // Endpoint updated to use the unique form ID
+    // 4. Send to Formspree endpoint (using the unique form ID)
     const formspreeUrl = `https://formspree.io/f/${formId}`;
     
     const response = await fetch(formspreeUrl, {
@@ -40,51 +38,49 @@ export async function POST(request: NextRequest) {
         'Accept': 'application/json',
       },
       body: JSON.stringify({
-        // Formspree requires the input fields directly.
-        // It uses '_subject' for the email subject line.
+        // Formspree payload structure
         name: name.trim(),
         email: email.trim(),
         message: message.trim(),
-        _subject: `Website Contact from ${name.trim()}`,
+        _subject: `Website Contact from ${name.trim()}`, // Formspree field for subject
       }),
     });
 
     // 5. Check if submission was successful
-    // Formspree returns status 200 on success.
     if (response.ok) {
-      // Formspree saves the submission and sends you an email.
+      // Successful submission
       return NextResponse.json(
-        { success: true, message: 'Message sent successfully!' },
+        { success: true, message: 'Message sent successfully! Your submission has been received.' },
         { status: 200 }
       );
     } else {
-      // If Formspree returns an error (4xx or 5xx status)
-      // We try to parse the error body if available, or fall back to a generic message.
+      // Handle non-successful Formspree response
       let result;
       try {
         result = await response.json();
       } catch {
-        // Fallback for non-JSON error pages (like the one you experienced with Web3Forms)
+        // Fallback for non-JSON error pages (the original error cause)
         return NextResponse.json(
-          { error: `Formspree returned status ${response.status}. Please check your Formspree dashboard.` },
+          { error: `Formspree returned status ${response.status}. Please check your Formspree dashboard for issues.` },
           { status: 500 }
         );
       }
       
       console.error('Formspree API Error:', result);
       return NextResponse.json(
-        { error: result.error || 'Failed to send message via Formspree. Please try again.' },
+        { error: result.error || 'Failed to send message. Please try again.' },
         { status: response.status }
       );
     }
 
   } catch (error) {
-    // Catch any unexpected errors (e.g., network issues, parsing failures)
+    // Catch any unexpected errors (e.g., network issues)
     console.error('API Route Error:', error);
     
+    // Check if it's a JSON parsing error on your end
     if (error instanceof SyntaxError) {
       return NextResponse.json(
-        { error: 'Invalid request format.' },
+        { error: 'Invalid request format from the client.' },
         { status: 400 }
       );
     }
