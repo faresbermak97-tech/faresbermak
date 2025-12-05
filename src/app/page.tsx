@@ -1,6 +1,7 @@
 'use client';
 
 import HeroSection from '@/components/sections/HeroSection';
+import Preloader from '@/components/Preloader';
 import dynamic from 'next/dynamic';
 import { SectionSkeleton } from '@/components/ui/Skeletons';
 
@@ -23,12 +24,15 @@ const ContactSection = dynamic(() => import('@/components/sections/ContactSectio
 
 export default function Home() {
   return (
-    <main className="bg-[#f5f5f5]">
+    <>
+      <Preloader />
+      <main className="bg-[#f5f5f5]">
       <HeroSection />
       <AboutSection />
       <CardsSection />
       <FeaturesSection />
       <ContactSection />
     </main>
+    </>
   );
 }

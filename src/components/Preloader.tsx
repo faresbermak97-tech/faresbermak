@@ -1,64 +1,82 @@
 // src/components/Preloader.tsx
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { PRELOADER_GREETINGS } from '@/config/site.config';
-import { lockScroll, unlockScroll, scrollToTop } from '@/utils';
+import { useEffect, useState } from "react";
+import { PRELOADER_GREETINGS } from "@/config/site.config";
+import { lockScroll, unlockScroll, scrollToTop } from "@/utils";
 
 export default function Preloader() {
   const [index, setIndex] = useState(0);
+  const [dimension, setDimension] = useState({ width: 1440, height: 900 });
   const [showPreloader, setShowPreloader] = useState(true);
+  const [isExiting, setIsExiting] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-    
-    // Prevent scroll during preload
+    if (typeof window !== "undefined") {
+      setDimension({ width: window.innerWidth, height: window.innerHeight });
+    }
+
     lockScroll();
     scrollToTop();
-    
-    let currentIndex = 0;
-    
+
+    let i = 0;
     const interval = setInterval(() => {
-      currentIndex++;
-      if (currentIndex < PRELOADER_GREETINGS.length) {
-        setIndex(currentIndex);
+      i++;
+      if (i < PRELOADER_GREETINGS.length) {
+        setIndex(i);
       } else {
         clearInterval(interval);
-        
-        // Delay hiding to ensure page is ready
+        setIsExiting(true);
+
         setTimeout(() => {
           setShowPreloader(false);
-          // Restore scroll after a frame
           requestAnimationFrame(() => {
             unlockScroll();
             scrollToTop();
           });
-        }, 200);
+        }, 900);
       }
-    }, 400);
-    
-    return () => {
-      clearInterval(interval);
-      unlockScroll();
-    };
+    }, 250);
+
+    return () => clearInterval(interval);
   }, []);
 
-  if (!showPreloader) return null;
-
-  if (!isClient) {
-    return (
-      <div className="fixed inset-0 z-9999 bg-black flex items-center justify-center">
-        <div className="text-white text-4xl md:text-6xl font-bold">
-          {PRELOADER_GREETINGS[0]}
-        </div>
-      </div>
-    );
-  }
+  if (!showPreloader || !isClient) return null;
 
   return (
-    <div className="fixed inset-0 z-9999 bg-black flex items-center justify-center">
-      <div className="text-white text-4xl md:text-6xl font-bold">
+    <div
+      className="fixed inset-0 z-9999 flex items-center justify-center transition-transform duration-900 ease-[cubic-bezier(0.76,0,0.24,1)]"
+      style={{
+        transform: isExiting ? "translateY(-100%)" : "translateY(0)",
+      }}
+    >
+      {/* Solid Black Screen */}
+      <div className="absolute inset-0 bg-black" />
+
+      {/* Perfect curved bottom */}
+      <div className="absolute top-full left-0 w-full h-[22vh] overflow-hidden pointer-events-none">
+        <svg
+          width="100%"
+          height="100%"
+          viewBox={`0 0 ${dimension.width} 300`}
+          preserveAspectRatio="none"
+        >
+          <path
+            d={`M0 0 Q ${dimension.width / 2} 300 ${dimension.width} 0`}
+            fill="black"
+          />
+        </svg>
+      </div>
+
+      {/* Greeting text */}
+      <div
+        className={`relative z-10 text-white text-4xl md:text-6xl font-bold flex items-center gap-4 transition-opacity duration-300 ${
+          isExiting ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        <span className="w-3 h-3 bg-white rounded-full animate-pulse" />
         {PRELOADER_GREETINGS[index]}
       </div>
     </div>
