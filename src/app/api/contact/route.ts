@@ -1,87 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// CRITICAL: Forces the route to be dynamic to prevent Vercel caching issues
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
-  console.log('=== CONTACT FORM ROUTE CALLED ===');
-  
   try {
     const body = await request.json();
-    console.log('Received data:', body);
-
     const { name, email, message } = body;
 
-    // Basic validation
+    // 1. Validation
     if (!name || !email || !message) {
-      console.log('Validation failed: missing fields');
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: 'Name, email, and message are required fields.' },
         { status: 400 }
       );
     }
 
-    // Get API key
-    const accessKey = process.env.WEB3FORMS_ACCESS_KEY;
-    console.log('API Key exists:', !!accessKey);
-    
+    // 2. Key Handling (The Fix)
+    // We try to get the key from the Environment. 
+    // If it fails (undefined), we use the hardcoded key you provided as a backup.
+    const accessKey = process.env.WEB3FORMS_ACCESS_KEY || 'c8c3d846-a53f-45a2-8b94-fe96d415f4c6';
+
     if (!accessKey) {
-      console.error('WEB3FORMS_ACCESS_KEY not found in environment');
       return NextResponse.json(
-        { error: 'Server configuration error' },
+        { error: 'Configuration Error: Access Key is missing.' },
         { status: 500 }
       );
     }
 
-    console.log('Sending to Web3Forms...');
-
-    // Send to Web3Forms
+    // 3. Send to Web3Forms
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        "Accept": "application/json",
       },
       body: JSON.stringify({
         access_key: accessKey,
-        name: name.trim(),
-        email: email.trim(),
-        message: message.trim(),
-        subject: `New message from ${name.trim()}`
-      })
+        name: name,
+        email: email,
+        message: message,
+        subject: `Website Message from ${name}`
+      }),
     });
 
-    console.log('Web3Forms response status:', response.status);
+    const result = await response.json();
 
-    const data = await response.json();
-    console.log('Web3Forms response data:', data);
-
-    if (!response.ok || !data.success) {
-      console.error("Web3Forms error:", data);
-      return NextResponse.json(
-        { 
-          error: data.message || "Failed to send message",
-          debug: data
-        },
-        { status: 500 }
-      );
+    if (result.success) {
+      return NextResponse.json({ success: true, message: "Email sent successfully!" }, { status: 200 });
+    } else {
+      console.error("Web3Forms API Error:", result);
+      return NextResponse.json({ error: result.message || "Failed to send email." }, { status: 500 });
     }
 
-    console.log('Message sent successfully!');
-    return NextResponse.json(
-      {
-        message: 'Message sent successfully!',
-        success: true
-      },
-      { status: 200 }
-    );
-
   } catch (error) {
-    console.error('=== ERROR IN CONTACT ROUTE ===');
-    console.error('Error:', error);
-    
+    console.error("Internal Server Error:", error);
     return NextResponse.json(
-      { 
-        error: 'Server error occurred',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
+      { error: "Something went wrong on the server." },
       { status: 500 }
     );
   }
