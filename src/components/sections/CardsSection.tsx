@@ -16,11 +16,11 @@ const DetailModal = dynamic(() => import("../ui/DetailModal"), {
 const CardsSection = () => {
   // REMOVED: scrollProgress state (caused re-renders)
   const [selectedCard, setSelectedCard] = useState<Service | null>(null)
-  
+
   // Refs for direct DOM manipulation
   const sectionRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-  
+
   // Animation frame management
   const rafId = useRef<number | null>(null)
   const isTicking = useRef(false)
@@ -48,12 +48,12 @@ const CardsSection = () => {
       // Calculate main progress (0 to 1) based on section position
       // We only care when the section is actively scrolling or just finished
       let progress = 0
-      
+
       if (rect.top <= 0) {
         // We are scrolling inside the section
         const scrolled = Math.abs(rect.top)
         const scrollableDistance = sectionHeight - windowHeight
-        
+
         if (scrollableDistance > 0) {
            progress = Math.min(Math.max(scrolled / scrollableDistance, 0), 1)
         }
@@ -84,7 +84,7 @@ const CardsSection = () => {
     // Attach listeners
     window.addEventListener("scroll", handleScroll, { passive: true })
     window.addEventListener("resize", handleScroll, { passive: true })
-    
+
     // Initial call to set positions correctly on load
     handleScroll()
 
@@ -108,14 +108,6 @@ const CardsSection = () => {
     <>
       <div ref={sectionRef} className="cards-section relative bg-[#FFFFFF] full-height">
         <div className="sticky top-0 h-screen w-full overflow-hidden">
-          <div className="section-title absolute top-8 left-0 right-0 text-center z-10">
-            <h1 className="text-4xl md:text-5xl font-bold">
-              <span className="inline-block hover:text-[#4D64FF] transition-colors duration-300">
-                Services I Offer
-              </span>
-            </h1>
-          </div>
-          
           <div className="cards-container relative h-full w-full flex items-center justify-center p-8 md:p-16 pt-20 md:pt-24">
             {SERVICES.map((card, index) => (
               <div
@@ -127,12 +119,12 @@ const CardsSection = () => {
                 className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl card-dimensions card-${index + 1}`}
                 // Removed transition-all here because we are scrubbing manually with scroll
                 // Keeping it might fight with our scroll updates
-                style={{ 
+                style={{
                    // We add 'will-change' hint for browser optimization
                    willChange: "transform",
                    // Initialize CSS var to prevent layout jump
-                   "--progress": "0" 
-                } as React.CSSProperties} 
+                   "--progress": "0"
+                } as React.CSSProperties}
               >
                 <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
                   <div className="content-left flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center relative z-10">
@@ -163,7 +155,7 @@ const CardsSection = () => {
                             className="object-cover rounded-2xl"
                             sizes="(max-width: 768px) 100vw, 50vw"
                             // Optimization: Don't lazy load if it's the first card
-                            priority={index === 0} 
+                            priority={index === 0}
                           />
                         </div>
                       </div>
