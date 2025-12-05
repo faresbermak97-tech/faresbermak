@@ -50,29 +50,60 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     };
 
-    // Log the contact form submission
-    console.log('New Contact Form Submission:', sanitizedData);
+    // Get API key from environment variable
+    const accessKey = process.env.WEB3FORMS_ACCESS_KEY;
+    
+    if (!accessKey) {
+      console.error('WEB3FORMS_ACCESS_KEY is not configured');
+      return NextResponse.json(
+        { error: 'Server configuration error. Please contact support.' },
+        { status: 500 }
+      );
+    }
 
-    // Send form data to Web3Forms
-    const web3formData = new FormData();
-    web3formData.append("access_key", process.env.WEB3FORMS_ACCESS_KEY || "c8c3d846-a53f-45a2-8b94-fe96d415f4c6");
-    web3formData.append("name", sanitizedData.name);
-    web3formData.append("email", sanitizedData.email);
-    web3formData.append("message", sanitizedData.message);
-    web3formData.append("from_name", "Fares Bermak Portfolio");
-    web3formData.append("subject", `New message from ${sanitizedData.name}`);
+    // Log the contact form submission (for debugging)
+    console.log('New Contact Form Submission:', {
+      name: sanitizedData.name,
+      email: sanitizedData.email,
+      timestamp: sanitizedData.timestamp
+    });
 
+    // Send form data to Web3Forms using JSON (not FormData)
     const response = await fetch("https://api.web3forms.com/submit", {
       method: "POST",
-      body: web3formData
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+      body: JSON.stringify({
+        access_key: accessKey,
+        name: sanitizedData.name,
+        email: sanitizedData.email,
+        message: sanitizedData.message,
+        from_name: "Fares Bermak Portfolio",
+        subject: `New message from ${sanitizedData.name}`,
+        // Optional: Add these for better email formatting
+        replyto: sanitizedData.email,
+        redirect: false
+      })
     });
 
     const data = await response.json();
 
-    if (!response.ok) {
+    // Log the response for debugging
+    console.log('Web3Forms Response:', {
+      status: response.status,
+      success: data.success,
+      message: data.message
+    });
+
+    if (!response.ok || !data.success) {
       console.error("Web3Forms API error:", data);
       return NextResponse.json(
-        { error: data.message || "Failed to send message. Please try again." },
+        { 
+          error: data.message || "Failed to send message. Please try again.",
+          details: data
+        },
         { status: 500 }
       );
     }
@@ -88,8 +119,15 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Contact form error:', error);
 
+    // More specific error message
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error details:', errorMessage);
+
     return NextResponse.json(
-      { error: 'Failed to send message. Please email me directly at faresbermak97@gmail.com' },
+      { 
+        error: 'Failed to send message. Please email me directly at faresbermak97@gmail.com',
+        technical: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      },
       { status: 500 }
     );
   }
