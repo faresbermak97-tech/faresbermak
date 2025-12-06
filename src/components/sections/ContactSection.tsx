@@ -135,7 +135,7 @@ export default function ContactSection() {
       setTimeout(() => {
         closeContactForm();
         setFormStatus({ type: null, message: '' });
-      }, 2000);
+      }, 5000);
 
     } catch (error) {
       console.error('Submission Error:', error);
