@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
 
 // Force dynamic to prevent caching issues
 export const dynamic = 'force-dynamic';
@@ -17,85 +18,60 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Get Form ID from environment
-    const formId = process.env.FORMSPREE_FORM_ID;
-
-    if (!formId) {
-      console.error('FORMSPREE_FORM_ID is not configured');
-      return NextResponse.json(
-        { error: 'Server configuration error. Please contact the administrator.' },
-        { status: 500 }
-      );
-    }
-    
-    // 4. Send to Formspree endpoint
-    const formspreeUrl = `https://formspree.io/f/${formId}`;
-    
-    const response = await fetch(formspreeUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+    // 3. Configure the Transporter using your Environment Variables
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER, // faresbermak97@gmail.com
+        pass: process.env.EMAIL_PASS, // sbks wusb tsic oedo
       },
-      body: JSON.stringify({
-        name: name.trim(),
-        email: email.trim(),
-        message: message.trim(),
-        _subject: `Website Contact from ${name.trim()}`,
-      }),
     });
 
-    // 5. Check if submission was successful
-    if (response.ok) {
-      // FIXED: Return proper success response
-      return NextResponse.json(
-        { 
-          success: true, 
-          message: 'Thank you for your message! I will get back to you soon.' 
-        },
-        { status: 200 }
-      );
-    } else {
-      // Handle Formspree errors
-      let errorMessage = 'Failed to send message. Please try again.';
-      
-      try {
-        const result = await response.json();
-        if (result.error) {
-          errorMessage = result.error;
-        }
-        console.error('Formspree API Error:', result);
-      } catch {
-        console.error('Formspree returned non-JSON error, status:', response.status);
-      }
-      
-      return NextResponse.json(
-        { error: errorMessage },
-        { status: response.status }
-      );
-    }
+    // 4. Set up the email structure
+    const mailOptions = {
+      from: `"My Site VA" <${process.env.EMAIL_USER}>`, // Sender Name: My Site VA
+      to: process.env.EMAIL_USER,                        // Sends to yourself
+      replyTo: email,                                    // Hitting "Reply" replies to the visitor
+      subject: `New Contact: ${name}`,
+      text: `
+        Name: ${name}
+        Email: ${email}
+        
+        Message:
+        ${message}
+      `,
+      html: `
+        <div style="font-family: sans-serif; padding: 20px; color: #333;">
+          <h2 style="color: #4D64FF;">New Message from My Site VA</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+          <br/>
+          <p><strong>Message:</strong></p>
+          <blockquote style="background-color: #f9f9f9; padding: 15px; border-left: 4px solid #4D64FF;">
+            ${message.replace(/\n/g, '<br>')}
+          </blockquote>
+        </div>
+      `,
+    };
+
+    // 5. Send the email
+    await transporter.sendMail(mailOptions);
+
+    // 6. Return success (Matches your ContactSection.tsx expectations)
+    return NextResponse.json(
+      { 
+        success: true, 
+        message: 'Thank you for your message! I will get back to you soon.' 
+      },
+      { status: 200 }
+    );
 
   } catch (error) {
-    console.error('API Route Error:', error);
+    console.error('Nodemailer Error:', error);
     
-    // Check if it's a JSON parsing error
-    if (error instanceof SyntaxError) {
-      return NextResponse.json(
-        { error: 'Invalid request format.' },
-        { status: 400 }
-      );
-    }
-
-    // Check for network errors
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      return NextResponse.json(
-        { error: 'Network error. Please check your connection and try again.' },
-        { status: 503 }
-      );
-    }
-
+    // Return error (Matches your ContactSection.tsx expectations)
     return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again.' },
+      { error: 'Failed to send message via email server. Please try again later.' },
       { status: 500 }
     );
   }

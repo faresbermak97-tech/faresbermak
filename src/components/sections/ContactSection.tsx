@@ -29,7 +29,8 @@ export default function ContactSection() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
+  // FIX: formRef is used here to safely reset the form later
+  const formRef = useRef<HTMLFormElement>(null); 
   const firstInputRef = useRef<HTMLInputElement>(null);
 
   // Animate button position
@@ -64,6 +65,7 @@ export default function ContactSection() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setFormStatus({ type: null, message: '' }); // Clear previous status
 
     const formData = new FormData(e.currentTarget);
     const contactData = {
@@ -97,35 +99,51 @@ export default function ContactSection() {
         }),
       });
 
-      const data = await response.json();
+      // Check if the response is JSON before parsing
+      const contentType = response.headers.get("content-type");
+      let data;
+      
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await response.json();
+      } else {
+        // Fallback for non-JSON responses
+        data = { message: await response.text() };
+      }
 
+      // 2. Handle server errors (if status is 4xx or 5xx)
       if (!response.ok) {
+        console.error('Server Error:', data);
         setFormStatus({
           type: 'error',
-          message: data.error || 'Failed to send your message. Please try again.'
+          message: data.error || data.message || 'Failed to send your message. Please try again.'
         });
         setIsSubmitting(false);
         return;
       }
 
-      // Success
+      // 3. Success!
       setFormStatus({
         type: 'success',
         message: data.message || 'Your message has been sent successfully!'
       });
       
-      // Reset form
-      e.currentTarget.reset();
+      // *** THE FIX IS HERE ***
+      // We use the ref to call .reset() which is safer in an async function.
+      formRef.current?.reset(); 
       
       // Close form after 2 seconds
       setTimeout(() => {
         closeContactForm();
         setFormStatus({ type: null, message: '' });
       }, 2000);
-    } catch {
+
+    } catch (error) {
+      console.error('Submission Error:', error);
+      // This catch block handles network errors or JSON parsing errors,
+      // which is why the previous "Something went wrong" message appeared.
       setFormStatus({
         type: 'error',
-        message: 'An unexpected error occurred. Please try again.'
+        message: 'Something went wrong. Please check your connection and try again.'
       });
     } finally {
       setIsSubmitting(false);
