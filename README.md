@@ -44,7 +44,8 @@ Helps remote teams integrate software tools, manage cloud systems, and resolve t
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/faresbermak.git
+   # TODO: Replace YOUR_GITHUB_USERNAME with your actual GitHub username
+   git clone https://github.com/faresbermak97-tech/faresbermak.git
    cd faresbermak
    ```
 
@@ -79,6 +80,11 @@ faresbermak/
 ├── src/                 # Source code
 │   ├── app/             # Next.js app directory
 │   │   ├── api/         # API routes
+│   │   ├── error.tsx    # Error boundary
+│   │   ├── not-found.tsx # 404 page
+│   │   ├── global-error.tsx # Global error handler
+│   │   ├── opengraph-image.tsx # Dynamic OG image
+│   │   ├── robots.ts    # Robots.txt generation
 │   │   ├── layout.tsx   # Root layout
 │   │   └── page.tsx     # Home page
 │   ├── components/      # React components
@@ -107,15 +113,16 @@ faresbermak/
 See `.env.example` for a list of required environment variables. These include:
 
 - Email service configuration (for contact form)
-  - Resend (recommended)
-  - SendGrid
-  - Nodemailer with SMTP
+  - Gmail SMTP (currently configured)
+  - Resend (alternative)
+  - SendGrid (alternative)
 - Analytics (optional)
-- API keys (if needed)
 
 ## Deployment
 
 The easiest way to deploy is using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+
+**Current deployment:** [https://faresbermak.vercel.app](https://faresbermak.vercel.app)
 
 For other deployment options, check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).
 
@@ -137,3 +144,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Phone**: +213 542 346 579
 - **LinkedIn**: [faresbermak-va](https://www.linkedin.com/in/faresbermak-va/)
 - **Instagram**: [@bermak_fares](https://www.instagram.com/bermak_fares/)
+- **Website**: [faresbermak.vercel.app](https://faresbermak.vercel.app)

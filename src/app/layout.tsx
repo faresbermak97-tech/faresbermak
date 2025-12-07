@@ -4,9 +4,14 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
+// ✅ OPTIMIZED FONT CONFIGURATION
 const inter = Inter({
   subsets: ["latin"],
-  display: "swap",
+  display: "swap", // Prevents FOIT (Flash of Invisible Text)
+  variable: "--font-inter", // CSS variable for flexibility
+  preload: true, // Explicitly preload for better performance
+  fallback: ["system-ui", "arial"], // Fallback fonts
+  adjustFontFallback: true, // Automatic fallback font optimization
 });
 
 export const metadata: Metadata = {
@@ -32,13 +37,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://faresbermak.vercel.app", // TODO: Replace with your actual domain
+    url: "https://faresbermak.vercel.app",
     title: "Fares Bermak - Remote Virtual Assistant & Data Entry Expert",
     description: "Professional remote virtual assistant and data entry services. Automate workflows, organize data, and streamline your business operations.",
     siteName: "Fares Bermak Portfolio",
     images: [
       {
-        url: "/Pictures/about me pic.webp", // TODO: Create an og-image.jpg for this
+        url: "/opengraph-image", // Uses the dynamic OG image we created
         width: 1200,
         height: 630,
         alt: "Fares Bermak - Virtual Assistant",
@@ -51,8 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Fares Bermak - Remote Virtual Assistant",
     description: "Professional remote virtual assistant and data entry services",
-    images: ["/Pictures/about me pic.webp"],
-    creator: "@faresbermak", // TODO: Replace with your actual Twitter handle
+    images: ["/opengraph-image"],
   },
 
   // Additional Meta
@@ -68,14 +72,8 @@ export const metadata: Metadata = {
     },
   },
 
-  // Verification (add these when you have them)
-  verification: {
-    // google: 'your-google-verification-code',
-    // yandex: 'your-yandex-verification-code',
-  },
-
   // Manifest
-  manifest: "/manifest.json", // TODO: Create manifest.json for PWA
+  manifest: "/manifest.json",
 
   // Icons
   icons: {
@@ -90,9 +88,9 @@ export const metadata: Metadata = {
   },
 
   // Other
-  metadataBase: new URL("https://faresbermak.vercel.app"), // TODO: Replace
+  metadataBase: new URL("https://faresbermak.vercel.app"),
   alternates: {
-    canonical: "https://faresbermak.vercel.app", // TODO: Replace
+    canonical: "https://faresbermak.vercel.app",
   },
 };
 
@@ -102,7 +100,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.className}>
+    // ✅ OPTIMIZED: Using both className and variable for maximum flexibility
+    <html lang="en" className={`${inter.variable} ${inter.className}`}>
       <head>
         {/* Performance & Security */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
@@ -136,8 +135,8 @@ export default function RootLayout({
               name: "Fares Bermak",
               jobTitle: "Remote Virtual Assistant & Data Entry Specialist",
               description: "Professional remote virtual assistant specializing in data entry, workflow automation, and IT support",
-              url: "https://faresbermak.vercel.app", // TODO: Replace
-              image: "https://faresbermak.vercel.app/Pictures/about me pic.webp", // TODO: Replace
+              url: "https://faresbermak.vercel.app",
+              image: "https://faresbermak.vercel.app/Pictures/about me pic.webp",
               sameAs: [
                 "https://www.linkedin.com/in/faresbermak-va/",
                 "https://www.instagram.com/bermak_fares/"
@@ -171,29 +170,11 @@ export default function RootLayout({
             })
           }}
         />
-
-        {/* GSAP is imported via npm in components that need it */}
       </head>
       <body suppressHydrationWarning className="antialiased">
         {children}
         <SpeedInsights />
         <Analytics />
-
-        {/* Optional: Add Analytics */}
-        {/* Uncomment when ready to add analytics
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX');
-          `}
-        </Script>
-        */}
       </body>
     </html>
   );

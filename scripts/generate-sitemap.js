@@ -7,13 +7,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration
-const SITE_URL = 'https://faresbermak.com'; // Replace with your actual domain
+const SITE_URL = 'https://faresbermak.vercel.app';
 const OUTPUT_PATH = path.join(__dirname, '../public/sitemap.xml');
+
+// ✅ FIXED: Removed hash-based routes - search engines can't crawl them
 const PAGES = [
   { url: '/', priority: '1.0', changefreq: 'weekly' },
-  { url: '/#work', priority: '0.8', changefreq: 'monthly' },
-  { url: '/#about', priority: '0.8', changefreq: 'monthly' },
-  { url: '/#contact', priority: '0.9', changefreq: 'monthly' },
+  // Hash routes removed - they're client-side only and not indexable
+  // Use anchor links in your HTML but don't include them in sitemap
 ];
 
 // Function to format date as YYYY-MM-DD

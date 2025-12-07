@@ -2,22 +2,38 @@
 
 const nextConfig = {
   reactCompiler: true,
+  
   // Enable strict mode for better error handling
   reactStrictMode: true,
 
-  // Optimize images
+  // ✅ OPTIMIZED IMAGE CONFIGURATION
   images: {
+    // Only add remote patterns if you're actually using remote images
+    // Since all your images are local (/Pictures/), this can be empty
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'localhost',
-        port: '',
-        pathname: '/**',
-      },
+      // Example for future remote images (currently not needed):
+      // {
+      //   protocol: 'https',
+      //   hostname: 'images.unsplash.com',
+      //   port: '',
+      //   pathname: '/**',
+      // },
     ],
+    
+    // ✅ Modern image formats (already good)
     formats: ['image/webp', 'image/avif'],
+    
+    // ✅ Optimized device sizes for responsive images
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    
+    // ✅ Image sizes for smaller dimensions
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    
+    // ✅ Enable image optimization
+    unoptimized: false,
+    
+    // ✅ Minimize image quality slightly for better performance (default is 75)
+    minimumCacheTTL: 60, // Cache optimized images for 60 seconds
   },
 
   // Compress output
@@ -51,6 +67,10 @@ const nextConfig = {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
         ],
       },
       {
@@ -59,6 +79,16 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'no-store, must-revalidate',
+          },
+        ],
+      },
+      {
+        // Cache static images for 1 year
+        source: '/Pictures/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
