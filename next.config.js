@@ -4,44 +4,54 @@ const nextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
 
-  // ✅ CRITICAL FCP FIX: Optimize CSS extraction
   experimental: {
     optimizePackageImports: [
       'lucide-react',
       '@vercel/analytics',
       '@vercel/speed-insights'
     ],
-    optimizeCss: true, // ✅ Reduces CSS bundle size
-    webpackBuildWorker: true, // ✅ Faster builds
+    optimizeCss: true,
+    webpackBuildWorker: true,
   },
 
-  // ✅ OPTIMIZED IMAGE CONFIGURATION
   images: {
     remotePatterns: [],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    qualities: [75, 85], // Added quality 85 to match the images in use
+    qualities: [75, 85],
     minimumCacheTTL: 60,
     unoptimized: false,
   },
 
-  // ✅ Enable compression
   compress: true,
 
-  // ✅ CRITICAL: Reduce JavaScript bundle size
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
   },
 
-  // ✅ Security headers (already good)
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: [
+          // ✅ ENHANCED SECURITY HEADERS
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://vitals.vercel-insights.com",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' data:",
+              "connect-src 'self' https://vitals.vercel-insights.com https://vercel.live",
+              "frame-ancestors 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join('; ')
+          },
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
@@ -58,6 +68,14 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
           },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
         ],
       },
       {
@@ -67,10 +85,17 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'no-store, must-revalidate',
           },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
         ],
       },
       {
-        // ✅ EXTENDED: Cache images for 1 year
         source: '/Pictures/:path*',
         headers: [
           {
@@ -80,7 +105,6 @@ const nextConfig = {
         ],
       },
       {
-        // ✅ NEW: Cache fonts for 1 year
         source: '/_next/static/media/:path*',
         headers: [
           {

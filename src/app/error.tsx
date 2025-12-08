@@ -1,7 +1,28 @@
+// src/app/error.tsx
 'use client'
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+
+// ✅ Error logging service (replace with Sentry, LogRocket, etc. in production)
+function logError(error: Error, errorInfo?: { digest?: string }) {
+  if (process.env.NODE_ENV === 'production') {
+    // In production, send to logging service
+    // Example: Sentry.captureException(error, { extra: errorInfo });
+    
+    // For now, just log to console
+    console.error('Error boundary caught:', {
+      message: error.message,
+      stack: error.stack,
+      digest: errorInfo?.digest,
+      timestamp: new Date().toISOString(),
+      url: typeof window !== 'undefined' ? window.location.href : 'unknown',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'
+    });
+  } else {
+    console.error('Error boundary caught:', error);
+  }
+}
 
 export default function Error({
   error,
@@ -11,9 +32,8 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log the error to console or error reporting service
-    console.error('Error boundary caught:', error)
-  }, [error])
+    logError(error, { digest: error.digest });
+  }, [error]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5] px-4">
@@ -38,7 +58,7 @@ export default function Error({
             Something went wrong!
           </h2>
           <p className="text-lg text-gray-600 mb-8">
-            We encountered an unexpected error. Please try again.
+            We encountered an unexpected error. Please try again or contact support if the problem persists.
           </p>
         </div>
 
@@ -59,11 +79,29 @@ export default function Error({
 
         {process.env.NODE_ENV === 'development' && error.message && (
           <div className="mt-8 p-4 bg-gray-100 rounded-lg text-left">
+            <p className="text-xs font-semibold text-gray-700 mb-2">Error Details (Dev Only):</p>
             <p className="text-sm font-mono text-gray-700 break-all">
               {error.message}
             </p>
+            {error.digest && (
+              <p className="text-xs text-gray-500 mt-2">
+                Digest: {error.digest}
+              </p>
+            )}
           </div>
         )}
+
+        <div className="mt-8">
+          <p className="text-sm text-gray-500">
+            Need help? Email me at{' '}
+            <a
+              href="mailto:faresbermak97@gmail.com"
+              className="text-[#4D64FF] hover:underline"
+            >
+              faresbermak97@gmail.com
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   )

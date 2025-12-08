@@ -1,5 +1,5 @@
 // src/components/sections/CardsSection.tsx
-// ✅ OPTIMIZED VERSION - Better performance, no re-renders
+// ✅ OPTIMIZED - Better performance with passive scroll
 "use client"
 
 import { useState, useEffect, useRef } from "react"
@@ -16,19 +16,26 @@ const DetailModal = dynamic(() => import("../ui/DetailModal"), {
 
 const CardsSection = () => {
   const [selectedCard, setSelectedCard] = useState<Service | null>(null)
-
-  // Refs for direct DOM manipulation
   const sectionRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-
-  // ✅ OPTIMIZATION: Single RAF request, no duplicate calls
   const rafId = useRef<number | null>(null)
+  const lastScrollY = useRef(0)
 
-  // ✅ OPTIMIZATION: Throttled scroll handler (16ms = ~60fps)
+  // ✅ OPTIMIZATION: Use passive scroll listener + threshold check
   useEffect(() => {
     let ticking = false
+    const SCROLL_THRESHOLD = 5 // Only update if scrolled more than 5px
 
     const handleScroll = () => {
+      const currentScrollY = window.scrollY
+      
+      // Skip if scroll change is too small
+      if (Math.abs(currentScrollY - lastScrollY.current) < SCROLL_THRESHOLD) {
+        return
+      }
+      
+      lastScrollY.current = currentScrollY
+
       if (!ticking) {
         ticking = true
         
@@ -51,7 +58,9 @@ const CardsSection = () => {
       const windowHeight = window.innerHeight
       const sectionHeight = rect.height
 
-      // Calculate scroll progress (0 to 1)
+      // Early exit if section is not visible
+      if (rect.bottom < 0 || rect.top > windowHeight) return
+
       let progress = 0
 
       if (rect.top <= 0) {
@@ -63,28 +72,30 @@ const CardsSection = () => {
         }
       }
 
-      // ✅ OPTIMIZATION: Direct DOM manipulation (no React re-renders)
+      // ✅ Calculate progress for each card
       const card1Progress = Math.min(progress * 3, 1)
       const card2Progress = Math.min(Math.max((progress - 0.33) * 3, 0), 1)
       const card3Progress = Math.min(Math.max((progress - 0.66) * 3, 0), 1)
 
-      updateCardStyle(0, card1Progress)
-      updateCardStyle(1, card2Progress)
-      updateCardStyle(2, card3Progress)
+      // ✅ Batch DOM updates
+      requestAnimationFrame(() => {
+        updateCardStyle(0, card1Progress)
+        updateCardStyle(1, card2Progress)
+        updateCardStyle(2, card3Progress)
+      })
     }
 
     const updateCardStyle = (index: number, val: number) => {
       const card = cardRefs.current[index]
       if (card) {
-        // Only update if value changed significantly (avoid excessive repaints)
         const currentVal = parseFloat(card.style.getPropertyValue("--progress") || "0")
-        if (Math.abs(currentVal - val) > 0.001) {
+        if (Math.abs(currentVal - val) > 0.01) { // Only update if significant change
           card.style.setProperty("--progress", val.toString())
         }
       }
     }
 
-    // Attach listeners with passive flag for better performance
+    // ✅ Use passive listener for better scroll performance
     window.addEventListener("scroll", handleScroll, { passive: true })
     window.addEventListener("resize", handleScroll, { passive: true })
 

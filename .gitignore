@@ -30,8 +30,33 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# ============================================================================
+# ⚠️ CRITICAL: NEVER COMMIT THESE FILES
+# ============================================================================
+# Environment variables - contains sensitive data like API keys and passwords
+.env
+.env.local
+.env*.local
+.env.development
+.env.test
+.env.production
+
+# Backup files that might contain sensitive data
+*.backup
+*.bak
+*.swp
+*.swo
+*~
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+Thumbs.db
+Desktop.ini
 
 # vercel
 .vercel
@@ -39,3 +64,21 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ============================================================================
+# LOGS AND TEMPORARY FILES
+# ============================================================================
+logs/
+*.log
+temp/
+tmp/
+
+# ============================================================================
+# SECURITY KEYS (Just in case)
+# ============================================================================
+*.key
+*.pem
+*.crt
+*.cert
+private/
+secrets/

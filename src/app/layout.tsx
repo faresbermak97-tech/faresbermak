@@ -1,16 +1,17 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 
-// ✅ OPTIMIZED FONT - Added weight range for better performance
 const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
   preload: true,
-  weight: ["400", "500", "600", "700"], // ✅ Only load weights you use
+  weight: ["400", "500", "600", "700"],
   fallback: ["system-ui", "arial"],
   adjustFontFallback: true,
 });
@@ -106,7 +107,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Fares Bermak" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-        {/* ✅ CRITICAL FIX: Preload hero image with fetchpriority="high" */}
+        {/* Preload critical assets */}
         <link 
           rel="preload" 
           as="image" 
@@ -114,11 +115,11 @@ export default function RootLayout({
           fetchPriority="high"
         />
 
-        {/* ✅ NEW: Preconnect to Vercel analytics for faster loading */}
+        {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://vitals.vercel-insights.com" />
         <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
 
-        {/* Structured Data (JSON-LD) for SEO */}
+        {/* Structured Data (JSON-LD) */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -166,9 +167,29 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning className="antialiased">
         {children}
-        {/* ✅ Load analytics AFTER main content */}
+        
+        {/* Load analytics after main content */}
         <SpeedInsights />
         <Analytics />
+
+        {/* Register Service Worker */}
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            id="register-sw"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                if ('serviceWorker' in navigator) {
+                  window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                      .then(reg => console.log('SW registered'))
+                      .catch(err => console.log('SW registration failed', err));
+                  });
+                }
+              `
+            }}
+          />
+        )}
       </body>
     </html>
   );
