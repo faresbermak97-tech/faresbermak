@@ -1,8 +1,6 @@
 import type { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://faresbermak.vercel.app'
-
   return {
     rules: [
       {
@@ -11,17 +9,11 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/private/'],
       },
       {
-        userAgent: 'Googlebot',
-        allow: '/',
-        disallow: ['/api/', '/private/'],
-      },
-      {
-        userAgent: 'Bingbot',
-        allow: '/',
-        disallow: ['/api/', '/private/'],
+        userAgent: 'GPTBot',
+        disallow: ['/'],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
-    host: baseUrl,
+    sitemap: 'https://faresbermak.vercel.app/sitemap.xml',
+    host: 'https://faresbermak.vercel.app',
   }
 }

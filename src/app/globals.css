@@ -102,12 +102,6 @@
   }
 }
 
-
-/* Note: Previously defined utility classes and custom scrollbar styles were removed as they were not being used in the application.
-This helps reduce bundle size and improve maintainability. If needed in the future, they can be re-added. */
-
-/* Add these to your globals.css - Mobile-first approach */
-
 /* ============================================
    HERO SECTION FIXES
    ============================================ */

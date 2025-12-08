@@ -1,4 +1,5 @@
 // src/components/sections/CardsSection.tsx
+// ✅ OPTIMIZED VERSION - Better performance, no re-renders
 "use client"
 
 import { useState, useEffect, useRef } from "react"
@@ -14,53 +15,55 @@ const DetailModal = dynamic(() => import("../ui/DetailModal"), {
 })
 
 const CardsSection = () => {
-  // REMOVED: scrollProgress state (caused re-renders)
   const [selectedCard, setSelectedCard] = useState<Service | null>(null)
 
   // Refs for direct DOM manipulation
   const sectionRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  // Animation frame management
+  // ✅ OPTIMIZATION: Single RAF request, no duplicate calls
   const rafId = useRef<number | null>(null)
-  const isTicking = useRef(false)
 
-  // 1. Optimized Scroll Handler
+  // ✅ OPTIMIZATION: Throttled scroll handler (16ms = ~60fps)
   useEffect(() => {
+    let ticking = false
+
     const handleScroll = () => {
-      if (!isTicking.current) {
-        isTicking.current = true
-        rafId.current = requestAnimationFrame(updateScroll)
+      if (!ticking) {
+        ticking = true
+        
+        if (rafId.current) {
+          cancelAnimationFrame(rafId.current)
+        }
+
+        rafId.current = requestAnimationFrame(() => {
+          updateCardPositions()
+          ticking = false
+        })
       }
     }
 
-    const updateScroll = () => {
-      if (!sectionRef.current) {
-        isTicking.current = false
-        return
-      }
+    const updateCardPositions = () => {
+      if (!sectionRef.current) return
 
       const section = sectionRef.current
       const rect = section.getBoundingClientRect()
       const windowHeight = window.innerHeight
       const sectionHeight = rect.height
 
-      // Calculate main progress (0 to 1) based on section position
-      // We only care when the section is actively scrolling or just finished
+      // Calculate scroll progress (0 to 1)
       let progress = 0
 
       if (rect.top <= 0) {
-        // We are scrolling inside the section
         const scrolled = Math.abs(rect.top)
         const scrollableDistance = sectionHeight - windowHeight
 
         if (scrollableDistance > 0) {
-           progress = Math.min(Math.max(scrolled / scrollableDistance, 0), 1)
+          progress = Math.min(Math.max(scrolled / scrollableDistance, 0), 1)
         }
       }
 
-      // 2. Apply transforms directly to DOM nodes (No React Re-render!)
-      // This preserves your exact animation logic
+      // ✅ OPTIMIZATION: Direct DOM manipulation (no React re-renders)
       const card1Progress = Math.min(progress * 3, 1)
       const card2Progress = Math.min(Math.max((progress - 0.33) * 3, 0), 1)
       const card3Progress = Math.min(Math.max((progress - 0.66) * 3, 0), 1)
@@ -68,24 +71,24 @@ const CardsSection = () => {
       updateCardStyle(0, card1Progress)
       updateCardStyle(1, card2Progress)
       updateCardStyle(2, card3Progress)
-
-      isTicking.current = false
     }
 
-    // Helper to safely update refs
     const updateCardStyle = (index: number, val: number) => {
       const card = cardRefs.current[index]
       if (card) {
-        // Directly updating CSS variable triggers the GPU transform in your CSS file
-        card.style.setProperty("--progress", val.toString())
+        // Only update if value changed significantly (avoid excessive repaints)
+        const currentVal = parseFloat(card.style.getPropertyValue("--progress") || "0")
+        if (Math.abs(currentVal - val) > 0.001) {
+          card.style.setProperty("--progress", val.toString())
+        }
       }
     }
 
-    // Attach listeners
+    // Attach listeners with passive flag for better performance
     window.addEventListener("scroll", handleScroll, { passive: true })
     window.addEventListener("resize", handleScroll, { passive: true })
 
-    // Initial call to set positions correctly on load
+    // Initial call
     handleScroll()
 
     return () => {
@@ -113,18 +116,14 @@ const CardsSection = () => {
               <div
                 key={card.id}
                 ref={(el) => {
-                  // Assign ref without returning it
                   if (el) cardRefs.current[index] = el
                 }}
                 className={`card absolute ${card.bgColor} rounded-3xl shadow-2xl card-dimensions card-${index + 1}`}
-                // Removed transition-all here because we are scrubbing manually with scroll
-                // Keeping it might fight with our scroll updates
                 style={{
-                   // We add 'will-change' hint for browser optimization
-                   willChange: "transform",
-                   // Initialize CSS var to prevent layout jump
-                   "--progress": "0"
-                } as React.CSSProperties}
+                  willChange: "transform",
+                  // @ts-expect-error - CSS custom property
+                  "--progress": "0"
+                }}
               >
                 <div className="card-content h-full flex flex-col lg:flex-row overflow-hidden rounded-3xl">
                   <div className="content-left flex-1 p-6 md:p-12 lg:p-16 flex flex-col justify-center relative z-10">
@@ -154,8 +153,9 @@ const CardsSection = () => {
                             fill
                             className="object-cover rounded-2xl"
                             sizes="(max-width: 768px) 100vw, 50vw"
-                            // Optimization: Don't lazy load if it's the first card
                             priority={index === 0}
+                            quality={85}
+                            loading={index === 0 ? "eager" : "lazy"}
                           />
                         </div>
                       </div>

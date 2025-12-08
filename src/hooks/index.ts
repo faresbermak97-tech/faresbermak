@@ -1,7 +1,7 @@
 // src/hooks/index.ts
+// ✅ CLEANED VERSION - No duplicates, optimized
 /**
- * Custom React hooks - simple and focused
- * Only what you actually use in your components
+ * Custom React hooks - Consolidated and optimized
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -74,6 +74,7 @@ export function useMenu() {
 
 // ============================================================================
 // TIME HOOK (for contact footer)
+// ✅ CONSOLIDATED - Only one version now
 // ============================================================================
 
 export function useCurrentTime(timezone: string = 'Africa/Algiers') {
@@ -113,4 +114,39 @@ export function useClickOutside(
       document.removeEventListener('touchstart', listener);
     };
   }, [ref, handler]);
+}
+
+// ============================================================================
+// THROTTLED SCROLL HOOK - NEW! (Performance optimization)
+// ============================================================================
+
+export function useThrottledScroll(
+  callback: (scrollY: number) => void,
+  delay: number = 16 // ~60fps
+) {
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastCallRef = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const now = Date.now();
+      
+      if (now - lastCallRef.current >= delay) {
+        callback(window.scrollY);
+        lastCallRef.current = now;
+      } else {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+          callback(window.scrollY);
+          lastCallRef.current = Date.now();
+        }, delay);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [callback, delay]);
 }

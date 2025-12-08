@@ -1,4 +1,5 @@
 // src/components/Preloader.tsx
+// 🔥 FIXED VERSION - No more flash!
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,12 +9,12 @@ import { lockScroll, unlockScroll, scrollToTop } from "@/utils";
 export default function Preloader() {
   const [index, setIndex] = useState(0);
   const [dimension, setDimension] = useState({ width: 1440, height: 900 });
+  // ✅ FIX: Start with true to show preloader immediately
   const [showPreloader, setShowPreloader] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
-  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    // Set dimensions on client side only
     if (typeof window !== "undefined") {
       setDimension({ width: window.innerWidth, height: window.innerHeight });
     }
@@ -43,7 +44,9 @@ export default function Preloader() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!showPreloader || !isClient) return null;
+  // ✅ FIX: Don't render null, render the preloader
+  // This ensures it shows immediately on mount
+  if (!showPreloader) return null;
 
   return (
     <div

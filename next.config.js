@@ -2,7 +2,7 @@
 
 const nextConfig = {
   reactCompiler: true,
-  
+
   // Enable strict mode for better error handling
   reactStrictMode: true,
 
@@ -19,19 +19,22 @@ const nextConfig = {
       //   pathname: '/**',
       // },
     ],
-    
+
     // ✅ Modern image formats (already good)
     formats: ['image/webp', 'image/avif'],
-    
+
     // ✅ Optimized device sizes for responsive images
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    
+
     // ✅ Image sizes for smaller dimensions
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    
+
+    // ✅ Image quality settings
+    qualities: [75, 85],
+
     // ✅ Enable image optimization
     unoptimized: false,
-    
+
     // ✅ Minimize image quality slightly for better performance (default is 75)
     minimumCacheTTL: 60, // Cache optimized images for 60 seconds
   },
@@ -41,7 +44,12 @@ const nextConfig = {
 
   // Enable experimental features
   experimental: {
-    optimizePackageImports: ['lucide-react'],
+    optimizePackageImports: [
+      'lucide-react',
+      '@vercel/analytics',
+      '@vercel/speed-insights'
+    ],
+    optimizeCss: true,
   },
 
   // Turbopack configuration
