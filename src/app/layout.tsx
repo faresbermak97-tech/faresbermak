@@ -4,14 +4,15 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
-// ✅ OPTIMIZED FONT CONFIGURATION
+// ✅ OPTIMIZED FONT - Added weight range for better performance
 const inter = Inter({
   subsets: ["latin"],
-  display: "swap", // Prevents FOIT (Flash of Invisible Text)
-  variable: "--font-inter", // CSS variable for flexibility
-  preload: true, // Explicitly preload for better performance
-  fallback: ["system-ui", "arial"], // Fallback fonts
-  adjustFontFallback: true, // Automatic fallback font optimization
+  display: "swap",
+  variable: "--font-inter",
+  preload: true,
+  weight: ["400", "500", "600", "700"], // ✅ Only load weights you use
+  fallback: ["system-ui", "arial"],
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -33,7 +34,6 @@ export const metadata: Metadata = {
   creator: "Fares Bermak",
   publisher: "Fares Bermak",
 
-  // Open Graph
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     siteName: "Fares Bermak Portfolio",
     images: [
       {
-        url: "/opengraph-image", // Uses the dynamic OG image we created
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Fares Bermak - Virtual Assistant",
@@ -51,7 +51,6 @@ export const metadata: Metadata = {
     ],
   },
 
-  // Twitter Card
   twitter: {
     card: "summary_large_image",
     title: "Fares Bermak - Remote Virtual Assistant",
@@ -59,7 +58,6 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
   },
 
-  // Additional Meta
   robots: {
     index: true,
     follow: true,
@@ -72,10 +70,8 @@ export const metadata: Metadata = {
     },
   },
 
-  // Manifest
   manifest: "/manifest.json",
 
-  // Icons
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -87,7 +83,6 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
 
-  // Other
   metadataBase: new URL("https://faresbermak.vercel.app"),
   alternates: {
     canonical: "https://faresbermak.vercel.app",
@@ -100,10 +95,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // ✅ OPTIMIZED: Using both className and variable for maximum flexibility
     <html lang="en" className={`${inter.variable} ${inter.className}`}>
       <head>
-        {/* Performance & Security */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         
@@ -113,17 +106,17 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Fares Bermak" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 
-        {/* Preconnect to external domains for better performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-        {/* Preload hero image for faster LCP */}
+        {/* ✅ CRITICAL FIX: Preload hero image with fetchpriority="high" */}
         <link 
           rel="preload" 
           as="image" 
           href="/Pictures/hero-image.webp" 
           fetchPriority="high"
         />
+
+        {/* ✅ NEW: Preconnect to Vercel analytics for faster loading */}
+        <link rel="preconnect" href="https://vitals.vercel-insights.com" />
+        <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
 
         {/* Structured Data (JSON-LD) for SEO */}
         <script
@@ -173,6 +166,7 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning className="antialiased">
         {children}
+        {/* ✅ Load analytics AFTER main content */}
         <SpeedInsights />
         <Analytics />
       </body>
