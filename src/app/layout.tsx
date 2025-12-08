@@ -103,6 +103,7 @@ export default function RootLayout({
         
         {/* Touch Icons */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Fares Bermak" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -111,7 +112,8 @@ export default function RootLayout({
         <link 
           rel="preload" 
           as="image" 
-          href="/Pictures/hero-image.webp" 
+          href="/Pictures/hero-image.webp"
+          imagesizes="100vw" 
           fetchPriority="high"
         />
 
