@@ -113,7 +113,7 @@ export default function RootLayout({
           rel="preload" 
           as="image" 
           href="/Pictures/hero-image.webp"
-          imagesizes="100vw" 
+          imageSizes="100vw" 
           fetchPriority="high"
         />
 
