@@ -356,6 +356,7 @@ export default function ContactSection() {
                 type="text"
                 id="name"
                 name="name"
+                autoComplete="name"
                 required
                 aria-required="true"
                 className="w-full bg-transparent border-b border-white/30 text-white text-xl md:text-2xl py-3 focus:outline-none focus:border-white focus:ring-2 focus:ring-white/50 transition-colors"
@@ -371,6 +372,7 @@ export default function ContactSection() {
                 type="email"
                 id="email"
                 name="email"
+                autoComplete="email"
                 required
                 aria-required="true"
                 className="w-full bg-transparent border-b border-white/30 text-white text-xl md:text-2xl py-3 focus:outline-none focus:border-white focus:ring-2 focus:ring-white/50 transition-colors"
@@ -385,6 +387,7 @@ export default function ContactSection() {
               <textarea
                 id="message"
                 name="message"
+                autoComplete="off"
                 required
                 rows={5}
                 aria-required="true"
