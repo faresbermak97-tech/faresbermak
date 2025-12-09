@@ -278,16 +278,16 @@ export default function ContactSection() {
             <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-6">
               <div className="flex flex-col sm:flex-row gap-6 md:gap-12">
                 <div>
-                  <h4 className="text-[10px] md:text-xs uppercase tracking-wider text-gray-500 mb-1">Version</h4>
+                  <p className="text-[10px] md:text-xs uppercase tracking-wider text-gray-400 mb-1 font-semibold">Version</p>
                   <p className="text-sm md:text-base">2026 © Edition</p>
                 </div>
                 <div>
-                  <h4 className="text-[10px] md:text-xs uppercase tracking-wider text-gray-500 mb-1">Local time</h4>
+                  <p className="text-[10px] md:text-xs uppercase tracking-wider text-gray-400 mb-1 font-semibold">Local time</p>
                   <p className="text-sm md:text-base">{currentTime} {PERSONAL_INFO.location.gmt}</p>
                 </div>
               </div>
               <div>
-                <h4 className="text-[10px] md:text-xs uppercase tracking-wider text-gray-500 mb-1">Socials</h4>
+                <p className="text-[10px] md:text-xs uppercase tracking-wider text-gray-400 mb-1 font-semibold">Socials</p>
                 <div className="flex gap-6 md:gap-8">
                   <a
                     href={PERSONAL_INFO.social.instagram}

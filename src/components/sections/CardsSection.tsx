@@ -165,7 +165,7 @@ const CardsSection = () => {
                             className="object-cover rounded-2xl"
                             sizes="(max-width: 768px) 100vw, 50vw"
                             priority={index === 0}
-                            quality={85}
+                            quality={75}
                             loading={index === 0 ? "eager" : "lazy"}
                           />
                         </div>

@@ -41,8 +41,9 @@ export default function AboutSection() {
                 <Image
                   src={ABOUT.image}
                   alt={ABOUT.imageAlt}
-                  width={600}
-                  height={600}
+                  width={750}
+                  height={1000}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>

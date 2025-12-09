@@ -101,6 +101,23 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         
+        {/* Critical CSS inline */}
+        <style dangerouslySetInnerHTML={{__html: `
+body { 
+margin: 0; 
+overflow-x: hidden; 
+font-family: system-ui, -apple-system, sans-serif;
+}
+.container {
+width: 100%;
+margin: 0 auto;
+padding: 0 1rem;
+}
+@media (min-width: 1200px) {
+.container { max-width: 1200px; }
+}
+`}} />
+        
         {/* Touch Icons */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="mobile-web-app-capable" content="yes" />
