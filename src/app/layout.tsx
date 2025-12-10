@@ -1,20 +1,9 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-  preload: true,
-  weight: ["400", "500", "600", "700"],
-  fallback: ["system-ui", "arial"],
-  adjustFontFallback: true,
-});
 
 export const metadata: Metadata = {
   title: "Fares Bermak - Remote Virtual Assistant & Data Entry Expert",
@@ -95,10 +84,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${inter.className}`}>
+    <html lang="en" className="font-inter">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="theme-color" content="#4D64FF" />
+        <meta name="msapplication-TileColor" content="#4D64FF" />
         
         {/* Critical CSS inline */}
         <style dangerouslySetInnerHTML={{__html: `
@@ -199,9 +190,38 @@ padding: 0 1rem;
               __html: `
                 if ('serviceWorker' in navigator) {
                   window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/sw.js')
-                      .then(reg => console.log('SW registered'))
+                    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                      .then(reg => {
+                        console.log('SW registered with scope:', reg.scope);
+
+                        // Handle service worker updates
+                        reg.addEventListener('updatefound', () => {
+                          const newWorker = reg.installing;
+                          if (newWorker) {
+                            newWorker.addEventListener('statechange', () => {
+                              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New SW is available, show notification or reload
+                                console.log('New service worker available');
+                                // Optional: Show a notification to user
+                                if (confirm('A new version of this app is available. Reload to update?')) {
+                                  window.location.reload();
+                                }
+                              }
+                            });
+                          }
+                        });
+                      })
                       .catch(err => console.log('SW registration failed', err));
+                  });
+
+                  // Handle controller changes (when a new SW takes control)
+                  let refreshing = false;
+                  navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                      refreshing = true;
+                      console.log('Controller changed, reloading page');
+                      window.location.reload();
+                    }
                   });
                 }
               `

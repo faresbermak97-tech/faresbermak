@@ -1,7 +1,7 @@
 // public/sw.js
 // Service Worker for offline functionality and caching
 
-const CACHE_NAME = 'faresbermak-v1';
+const CACHE_NAME = 'faresbermak-v2';
 const OFFLINE_URL = '/offline.html';
 
 // Assets to cache immediately

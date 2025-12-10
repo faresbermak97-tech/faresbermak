@@ -3,6 +3,7 @@
 const nextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
+  poweredByHeader: false,
 
   experimental: {
     optimizePackageImports: [
@@ -25,6 +26,7 @@ const nextConfig = {
   },
 
   compress: true,
+  output: 'standalone', // For Docker/production
 
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
@@ -120,7 +122,36 @@ const nextConfig = {
     return [];
   },
 
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    // Aggressive chunk splitting for better caching and reduced bundle size
+    if (!isServer) {
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: {
+            minChunks: 2,
+            priority: -20,
+            reuseExistingChunk: true,
+          },
+          vendor: {
+            test: /[\/]node_modules[\/]/,
+            name(module) {
+              const packageName = module.context.match(/[\/]node_modules[\/](.*?)([\/]|$)/)[1];
+              return `npm.${packageName.replace('@', '')}`;
+            },
+            priority: -10,
+            chunks: 'all',
+          },
+          common: {
+            name: 'common',
+            minChunks: 3,
+            priority: -10,
+            reuseExistingChunk: true,
+          },
+        },
+      };
+    }
+
     return config;
   },
 

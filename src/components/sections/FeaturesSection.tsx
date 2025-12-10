@@ -11,7 +11,8 @@ import "./Animations.css"
 import { ModalSkeleton } from "../ui/Skeletons"
 
 const DetailModal = dynamic(() => import("../ui/DetailModal"), {
-  loading: () => <ModalSkeleton />
+  loading: () => <ModalSkeleton />,
+  ssr: false
 })
 
 export default function FeaturesSection() {

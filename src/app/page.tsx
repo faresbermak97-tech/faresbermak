@@ -7,19 +7,23 @@ import { SectionSkeleton } from '@/components/ui/Skeletons';
 
 // Lazy load components that are not immediately visible
 const AboutSection = dynamic(() => import('@/components/sections/AboutSection'), {
-  loading: () => <SectionSkeleton />
+  loading: () => <SectionSkeleton />,
+  ssr: false,
 });
 
 const CardsSection = dynamic(() => import('../components/sections/CardsSection'), {
-  loading: () => <SectionSkeleton />
+  loading: () => <SectionSkeleton />,
+  ssr: false,
 });
 
 const FeaturesSection = dynamic(() => import('@/components/sections/FeaturesSection'), {
-  loading: () => <SectionSkeleton />
+  loading: () => <SectionSkeleton />,
+  ssr: false,
 });
 
 const ContactSection = dynamic(() => import('@/components/sections/ContactSection'), {
-  loading: () => <SectionSkeleton />
+  loading: () => <SectionSkeleton />,
+  ssr: false,
 });
 
 export default function Home() {

@@ -25,6 +25,9 @@ export default {
         'safe-right': 'env(safe-area-inset-right)',
         'safe-bottom': 'env(safe-area-inset-bottom)',
         'safe-left': 'env(safe-area-inset-left)',
+      },
+      fontFamily: {
+        'inter': ['Inter', 'system-ui', 'sans-serif'],
       }
     }
   }

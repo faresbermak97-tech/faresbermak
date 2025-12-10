@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+/* Variable font declarations for Inter */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter/Inter-VariableFont_opsz,wght.woff2") format("woff2"),
+       url("/fonts/inter/Inter-VariableFont_opsz,wght.woff") format("woff");
+  font-weight: 100 900; /* Variable weight range */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter/Inter-Italic-VariableFont_opsz,wght.woff2") format("woff2"),
+       url("/fonts/inter/Inter-Italic-VariableFont_opsz,wght.woff") format("woff");
+  font-weight: 100 900; /* Variable weight range */
+  font-style: italic;
+  font-display: swap;
+}
+
 /* Component styles are now handled with Tailwind classes */
 
 /* Base Container */

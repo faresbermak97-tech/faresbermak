@@ -11,7 +11,8 @@ import "./CardsSection.css"
 import { ModalSkeleton } from "../ui/Skeletons"
 
 const DetailModal = dynamic(() => import("../ui/DetailModal"), {
-  loading: () => <ModalSkeleton />
+  loading: () => <ModalSkeleton />,
+  ssr: false
 })
 
 const CardsSection = () => {
