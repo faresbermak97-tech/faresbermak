@@ -2,9 +2,18 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { useMenu } from '@/hooks';
 import { PERSONAL_INFO, NAV_ITEMS } from '@/config/site.config';
+
+// Dynamically import the Image component with SSR disabled
+const DynamicImage = dynamic(
+  () => import('next/image'),
+  { 
+    ssr: false,
+    loading: () => <div className="w-full h-full bg-gray-200" aria-hidden="true" />
+  }
+);
 
 export default function HeroSection() {
   const { isOpen, toggle, close, menuRef, buttonRef } = useMenu();
@@ -176,13 +185,18 @@ export default function HeroSection() {
 
       {/* Hero Image */}
       <div className="absolute inset-0 z-0">
-        <Image
+        <DynamicImage
           src="/Pictures/hero-image.webp"
           alt={PERSONAL_INFO.name}
           fill
           className="object-cover object-[center_20%]"
           sizes="100vw"
           priority
+          quality={75}
+          style={{
+            objectFit: "cover",
+            objectPosition: "center 20%"
+          }}
         />
         <div className="absolute inset-0 bg-black/5"></div>
       </div>

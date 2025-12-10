@@ -121,6 +121,10 @@ export default function FeaturesSection() {
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                quality={75}
+                style={{
+                  objectFit: "cover"
+                }}
               />
             </div>
             <div className={styles.divider} />

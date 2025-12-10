@@ -64,12 +64,12 @@ export const metadata: Metadata = {
 
   icons: {
     icon: [
-      { url: "/favicon.ico?v=2", sizes: "any" },
-      { url: "/favicon-16x16.png?v=2", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png?v=2", sizes: "32x32", type: "image/png" }
+      { url: "/favicon.ico?v=3", sizes: "any" },
+      { url: "/favicon-16x16.png?v=3", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png?v=3", sizes: "32x32", type: "image/png" }
     ],
-    shortcut: "/favicon-16x16.png?v=2",
-    apple: "/apple-touch-icon.png?v=2",
+    shortcut: "/favicon-16x16.png?v=3",
+    apple: "/apple-touch-icon.png?v=3",
   },
 
   metadataBase: new URL("https://faresbermak.vercel.app"),
@@ -113,7 +113,7 @@ padding: 0 1rem;
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Fares Bermak" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
 
         {/* Preload critical assets */}
         <link 
