@@ -115,15 +115,6 @@ padding: 0 1rem;
         <meta name="apple-mobile-web-app-title" content="Fares Bermak" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3" />
 
-        {/* Preload critical assets */}
-        <link 
-          rel="preload" 
-          as="image" 
-          href="/Pictures/hero-image.webp"
-          imageSizes="100vw" 
-          fetchPriority="high"
-        />
-
         {/* Preconnect to external domains */}
         <link rel="preconnect" href="https://vitals.vercel-insights.com" />
         <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
